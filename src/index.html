@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber Less - Barbearia</title>
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --dark-secondary: #1e1e1e;
+            --darker-secondary: #171717;
+            --text-color: #ffffff;
+            --accent-color: #ff9800;
+            --border-color: #333333;
+            --button-orange: #ff9800;
+            --green-badge: #4CAF50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: black;
+            color: var(--text-color);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            padding: 0;
+            border-right: none;
+            /* Removemos margin-right fixo para controlar via JavaScript */
+        }
+
+        /* Quando a aba de serviços está ativa, adicionamos o margin-right */
+        .tab-services-active .main-content {
+            margin-right: 350px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: black;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            background-color: white;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .logo-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        .rating i {
+            color: var(--accent-color);
+            margin-right: 4px;
+            font-size: 10px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .favorite-btn {
+            background: transparent;
+            border: none;
+            color: #777;
+            margin-right: 15px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .favorite-btn:hover {
+            color: #ff4d4d;
+        }
+
+        .schedule-btn {
+            background-color: var(--button-orange);
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* Main banner */
+        .main-banner {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2;
+        }
+
+        .logo-overlay img {
+            width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .logo-title {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .logo-subtitle {
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            background-color: black;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+            padding: 0 15px;
+        }
+
+        .nav-tab {
+            padding: 12px 15px;
+            cursor: pointer;
+            position: relative;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .nav-tab.active {
+            color: var(--text-color);
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-color);
+        }
+
+        /* Amenities section */
+        .amenities-section {
+            padding: 20px;
+            background-color: black;
+        }
+
+        .section-title {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .section-subtitle {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .amenity-item {
+            background-color: #222;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .amenity-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .amenity-name {
+            font-size: 12px;
+        }
+
+        /* Services section */
+        .services-section {
+            padding: 20px;
+            background-color: black;
+        }
+
+        .services-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* Serviços */
+        .services-list {
+            margin-top: 20px;
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .service-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 12px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .service-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .service-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .service-price {
+            font-size: 12px;
+            color: #4CAF50;
+        }
+
+        .service-meta {
+            display: flex;
+            align-items: center;
+        }
+
+        .service-duration {
+            display: flex;
+            align-items: center;
+            color: #aaa;
+            font-size: 12px;
+            margin-right: 15px;
+        }
+
+        .service-duration i {
+            margin-right: 5px;
+        }
+
+        .service-book-btn {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .service-book-btn:hover {
+            background-color: #0069c0;
+        }
+
+        /* Transições suaves para elementos interativos */
+        .service-book-btn,
+        .nav-tab,
+        .favorite-btn,
+        .schedule-btn,
+        .amenity-item,
+        .social-icon,
+        .map-btn {
+            transition: all 0.3s ease;
+        }
+
+        /* Estado hover para botões de agendamento */
+        .service-book-btn:hover {
+            background-color: #006bc0;
+            transform: translateY(-2px);
+        }
+
+        /* Estado hover para tabs */
+        .nav-tab:hover {
+            color: #ddd;
+        }
+
+        /* Estado hover para itens de comodidades */
+        .amenity-item:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+
+        /* Estado hover para o botão de agendar agora */
+        .schedule-btn:hover {
+            background-color: #e08800;
+            transform: translateY(-1px);
+        }
+
+        .search-bar {
+            position: relative;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            background-color: #222;
+            border: none;
+            border-radius: 25px;
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 350px;
+            padding: 20px;
+            background-color: #121212;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            border-left: 1px solid var(--border-color);
+            /* Exibimos ou ocultamos via JavaScript, não usando display:none para preservar as animações */
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        /* Quando a aba de serviços está ativa, exibimos a sidebar */
+        .tab-services-active .sidebar {
+            transform: translateX(0);
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        /* Location section */
+        .location-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .location-address {
+            flex: 1;
+        }
+
+        .address-line {
+            font-size: 12px;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        .map-btn {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        /* Schedule section */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .schedule-day {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .schedule-hours {
+            font-size: 12px;
+            text-align: right;
+        }
+
+        .today-badge {
+            display: inline-block;
+            background-color: var(--green-badge);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+
+        /* Payment section */
+        .payment-methods {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .payment-method {
+            background-color: #222;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* Social section */
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icon {
+            background-color: #222;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* Contact section */
+        .contact-item {
+            display: flex;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .contact-icon-container {
+            background-color: #222;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .contact-text {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .tab-services-active .main-content {
+                margin-right: 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                border-top: 1px solid var(--border-color);
+                border-left: none;
+                transform: translateY(100%);
+            }
+
+            .tab-services-active .sidebar {
+                transform: translateY(0);
+            }
+
+            .amenities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .amenities-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .service-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .service-meta {
+                width: 100%;
+                margin-top: 10px;
+                justify-content: space-between;
+            }
+
+            .main-banner {
+                height: 160px;
+            }
+        }
+
+        /* Estilos para a lista de profissionais */
+        .professionals-list {
+            margin-top: 20px;
+        }
+
+        .professional-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .professional-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            background-color: #222;
+        }
+
+        .professional-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .professional-info {
+            flex: 1;
+        }
+
+        .professional-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .professional-note {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .professional-select-btn {
+            background-color: var(--button-orange);
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .professional-select-btn:hover {
+            background-color: #e08800;
+        }
+
+        /* Content tabs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Estilo responsivo para dispositivos móveis */
+        @media screen and (max-width: 576px) {
+            .professional-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .professional-image {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .professional-info {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="main-content">
+            <header class="header">
+                <div class="logo-container">
+                    <div class="logo-img">
+                        <!-- Imagem 40x40 para o ícone da barbearia -->
+                        <img src="./imagem/icone_png.png" alt="Logo Barber Less">
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-name">Barber Less</span>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <span>5.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button class="favorite-btn">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button class="schedule-btn">Agendar agora</button>
+                </div>
+            </header>
+
+            <div class="main-banner">
+                <!-- Imagem 800x400 para o banner -->
+                <img class="banner-img" src="./imagem/oie_123462534IV5DQ6.png" alt="Banner Barber Less">
+                <div class="logo-overlay">
+                </div>
+            </div>
+
+            <div class="nav-tabs">
+                <div class="nav-tab active" data-tab="services">Serviços</div>
+                <div class="nav-tab" data-tab="professionals">Profissionais</div>
+                <div class="nav-tab" data-tab="loyalty">Fidelidade</div>
+                <div class="nav-tab" data-tab="products">Produtos</div>
+                <div class="nav-tab" data-tab="packages">Pacotes</div>
+                <div class="nav-tab" data-tab="subscriptions">Assinaturas</div>
+                <div class="nav-tab" data-tab="reviews">Avaliações</div>
+            </div>
+
+            <div class="amenities-section">
+                <h2 class="section-title">Comodidades</h2>
+                <div class="section-subtitle">Clique no item para obter informações</div>
+
+                <div class="amenities-grid">
+                    <div class="amenity-item">
+                        <div class="amenity-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="amenity-name">Wi-fi</div>
+                    </div>
+
+                    <div class="amenity-item">
+                        <div class="amenity-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="amenity-name">Estacionamento</div>
+                    </div>
+
+                    <div class="amenity-item">
+                        <div class="amenity-icon">
+                            <i class="fas fa-wheelchair"></i>
+                        </div>
+                        <div class="amenity-name">Acessibilidade</div>
+                    </div>
+
+                    <div class="amenity-item">
+                        <div class="amenity-icon">
+                            <i class="fas fa-child"></i>
+                        </div>
+                        <div class="amenity-name">Atende crianças</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo da Tab Serviços -->
+            <div id="services" class="tab-content active">
+                <div class="services-section">
+                    <div class="services-header">
+                        <h2 class="section-title">Serviços</h2>
+                    </div>
+
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Pesquisar">
+                    </div>
+
+                    <div class="services-list">
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Barba">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Barba</div>
+                                    <div class="service-price">R$ 30,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    15 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Botox">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Botox</div>
+                                    <div class="service-price">R$ 50,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    90 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Celagem">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Celagem</div>
+                                    <div class="service-price">R$ 100,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    105 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Corte">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Corte</div>
+                                    <div class="service-price">R$ 40,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    45 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Corte e Barba">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Corte e Barba</div>
+                                    <div class="service-price">R$ 70,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    60 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Corte e sobrancelha">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Corte e sobrancelha</div>
+                                    <div class="service-price">R$ 45,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    45 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Nevou">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Nevou</div>
+                                    <div class="service-price">R$ 100,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    105 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Penteado">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Penteado</div>
+                                    <div class="service-price">R$ 30,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    30 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Pezinho">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Pezinho</div>
+                                    <div class="service-price">R$ 20,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    15 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Pezinho e Sobrancelha">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Pezinho e Sobrancelha</div>
+                                    <div class="service-price">R$ 30,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    30 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+
+                        <div class="service-item">
+                            <div class="service-info">
+                                <div class="service-icon">
+                                    <!-- Imagem 50x50 para o serviço -->
+                                    <img src="./imagem/icone-servicos.png" alt="Sobrancelha">
+                                </div>
+                                <div class="service-details">
+                                    <div class="service-name">Sobrancelha</div>
+                                    <div class="service-price">R$ 15,00</div>
+                                </div>
+                            </div>
+                            <div class="service-meta">
+                                <div class="service-duration">
+                                    <i class="far fa-clock"></i>
+                                    15 min
+                                </div>
+                                <button class="service-book-btn">Agendar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nova seção de Profissionais -->
+            <div id="professionals" class="tab-content">
+                <div class="services-section">
+                    <div class="services-header">
+                        <h2 class="section-title">Profissionais</h2>
+                    </div>
+
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Pesquisar">
+                    </div>
+
+                    <!-- Lista de profissionais -->
+                    <div class="professionals-list">
+                        <div class="professional-item">
+                            <div class="professional-image">
+                                <!-- Imagem para o profissional -->
+                                <img src="./imagem/icone-profissional.png" alt="Gomes">
+                            </div>
+                            <div class="professional-info">
+                                <div class="professional-name">Gomes</div>
+                                <div class="professional-note">Sem observação</div>
+                            </div>
+                            <button class="professional-select-btn">Selecionar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Localização</h3>
+                    <div class="location-content">
+                        <div class="location-address">
+                            <div class="address-line">Rua José Barros Magaldi, 301 - 05815-000</div>
+                            <div class="address-line">Jardim São João - São Paulo/SP</div>
+                        </div>
+                        <button class="map-btn">
+                            <i class="fas fa-location-arrow"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Horário de atendimento</h3>
+                    <div class="schedule-grid">
+                        <div class="schedule-day">Terça-Feira</div>
+                        <div class="schedule-hours">10:00 - 20:00</div>
+
+                        <div class="schedule-day">Quarta-Feira</div>
+                        <div class="schedule-hours">10:00 - 20:00</div>
+
+                        <div class="schedule-day">Quinta-Feira</div>
+                        <div class="schedule-hours">10:00 - 20:00</div>
+
+                        <div class="schedule-day">Sexta-Feira</div>
+                        <div class="schedule-hours">08:00 - 20:00</div>
+
+                        <div class="schedule-day">Sábado</div>
+                        <div class="schedule-hours">08:00 - 20:00</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Formas de pagamento</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method">Dinheiro</div>
+                        <div class="payment-method">Cartão de Crédito</div>
+                        <div class="payment-method">Cartão de Débito</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Redes Sociais</h3>
+                    <div class="social-icons">
+                        <a href="https://api.whatsapp.com/send?phone=5511962581678" target="_blank" class="social-icon">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.instagram.com/barberless_?igsh=Zjl0dTF" target="_blank"
+                            class="social-icon">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Contato</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon-container">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="contact-text">(11) 96258-1678</div>
+                        </div>
+
+                        <div class="contact-item">
+                            <div class="contact-icon-container">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-text">(11) 96258-1678</div>
+                        </div>
+                    </div>
+
+
+                    <script>
+                        // Função para alternar entre as abas
+                        function switchTab(tabName) {
+                            // Oculta todos os conteúdos das abas
+                            document.querySelectorAll('.tab-content').forEach(content => {
+                                content.classList.remove('active');
+                            });
+
+                            // Remove a classe ativa de todas as abas
+                            document.querySelectorAll('.nav-tab').forEach(tab => {
+                                tab.classList.remove('active');
+                            });
+
+                            // Ativa a aba selecionada
+                            document.querySelector(`.nav-tab[data-tab="${tabName}"]`).classList.add('active');
+
+                            // Exibe o conteúdo da aba selecionada
+                            const targetContent = document.getElementById(tabName);
+                            if (targetContent) {
+                                targetContent.classList.add('active');
+                            }
+
+                            // Adiciona ou remove a classe tab-services-active no container
+                            const container = document.querySelector('.container');
+                            if (tabName === 'services') {
+                                container.classList.add('tab-services-active');
+                            } else {
+                                container.classList.remove('tab-services-active');
+                            }
+                        }
+
+                        // Configurar listeners para as abas
+                        document.querySelectorAll('.nav-tab').forEach(tab => {
+                            tab.addEventListener('click', function () {
+                                const tabName = this.getAttribute('data-tab');
+                                switchTab(tabName);
+                            });
+                        });
+
+                        // Inicializa a aba "serviços" como ativa por padrão
+                        document.addEventListener('DOMContentLoaded', function () {
+                            switchTab('services');
+                        });
+
+                        // Favorite button toggle
+                        const favoriteBtn = document.querySelector('.favorite-btn');
+                        favoriteBtn.addEventListener('click', function () {
+                            const icon = this.querySelector('i');
+                            if (icon.classList.contains('far')) {
+                                icon.classList.remove('far');
+                                icon.classList.add('fas');
+                                icon.style.color = '#ff4d4d';
+                            } else {
+                                icon.classList.remove('fas');
+                                icon.classList.add('far');
+                                icon.style.color = '#777';
+                            }
+                        });
+
+                        // Schedule button - Modificado para WhatsApp
+                        document.querySelector('.schedule-btn').addEventListener('click', function () {
+                            const confirmed = confirm('Deseja iniciar um agendamento na Barber Less?');
+                            if (confirmed) {
+                                // Redireciona para o link do WhatsApp
+                                window.location.href = 'https://api.whatsapp.com/send?phone=5511962581678';
+                            }
+                        });
+
+                        // Botões de agendamento de serviços - Modificado para WhatsApp
+                        document.querySelectorAll('.service-book-btn').forEach(button => {
+                            button.addEventListener('click', function () {
+                                const serviceName = this.closest('.service-item').querySelector('.service-name').textContent;
+                                const servicePrice = this.closest('.service-item').querySelector('.service-price').textContent;
+                                const serviceDuration = this.closest('.service-item').querySelector('.service-duration').textContent.trim();
+
+                                const confirmed = confirm(`Confirmar agendamento para:
+Serviço: ${serviceName}
+Preço: ${servicePrice}
+Duração: ${serviceDuration}`);
+
+                                if (confirmed) {
+                                    // Redireciona para o link do WhatsApp com informações do serviço
+                                    const message = encodeURIComponent(`Olá! Gostaria de agendar: ${serviceName} - ${servicePrice} - ${serviceDuration}`);
+                                    window.location.href = `https://api.whatsapp.com/send?phone=5511962581678&text=${message}`;
+                                }
+                            });
+                        });
+
+                        // Amenity items click
+                        document.querySelectorAll('.amenity-item').forEach(item => {
+                            item.addEventListener('click', function () {
+                                const amenityName = this.querySelector('.amenity-name').textContent;
+                                let message = '';
+
+                                switch (amenityName) {
+                                    case 'Wi-fi':
+                                        message = 'Wi-fi gratuito disponível para clientes.';
+                                        break;
+                                    case 'Estacionamento':
+                                        message = 'Estacionamento disponível próximo ao estabelecimento.';
+                                        break;
+                                    case 'Acessibilidade':
+                                        message = 'Estabelecimento com acesso para cadeirantes.';
+                                        break;
+                                    case 'Atende crianças':
+                                        message = 'Atendemos crianças de todas as idades.';
+                                        break;
+                                }
+
+                                if (message) {
+                                    alert(message);
+                                }
+                            });
+                        });
+
+                        // Map button
+                        document.querySelector('.map-btn').addEventListener('click', function () {
+                            alert('Abrindo mapa para Rua José Barros Magaldi, 301 - São Paulo/SP');
+                        });
+
+                        // Funcionalidade de pesquisa para serviços
+                        const searchServiceInput = document.querySelector('#services .search-bar input');
+                        if (searchServiceInput) {
+                            searchServiceInput.addEventListener('input', function () {
+                                const searchTerm = this.value.toLowerCase();
+                                const serviceItems = document.querySelectorAll('#services .service-item');
+
+                                serviceItems.forEach(item => {
+                                    const serviceName = item.querySelector('.service-name').textContent.toLowerCase();
+                                    if (serviceName.includes(searchTerm)) {
+                                        item.style.display = 'flex';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                            });
+                        }
+
+                        // Funcionalidade de pesquisa para profissionais
+                        const searchProfessionalsInput = document.querySelector('#professionals .search-bar input');
+                        if (searchProfessionalsInput) {
+                            searchProfessionalsInput.addEventListener('input', function () {
+                                const searchTerm = this.value.toLowerCase();
+                                const professionalItems = document.querySelectorAll('.professional-item');
+
+                                professionalItems.forEach(item => {
+                                    const professionalName = item.querySelector('.professional-name').textContent.toLowerCase();
+                                    if (professionalName.includes(searchTerm)) {
+                                        item.style.display = 'flex';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                });
+                            });
+                        }
+
+                        // Data atual para badge "HOJE" no horário
+                        const today = new Date().getDay(); // 0 = domingo, 1 = segunda, etc.
+                        const days = ['Domingo', 'Segunda-Feira', 'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira', 'Sexta-Feira', 'Sábado'];
+                        const scheduleDays = document.querySelectorAll('.schedule-day');
+
+                        scheduleDays.forEach(day => {
+                            if (days[today] === day.textContent) {
+                                const badge = document.createElement('span');
+                                badge.classList.add('today-badge');
+                                badge.textContent = 'HOJE';
+                                day.appendChild(badge);
+                            }
+                        });
+
+                        // Funcionalidade para seleção de profissionais
+                        document.querySelectorAll('.professional-select-btn').forEach(button => {
+                            button.addEventListener('click', function () {
+                                const professionalName = this.closest('.professional-item').querySelector('.professional-name').textContent;
+
+                                // Perguntar se deseja agendar com este profissional
+                                const confirmed = confirm(`Deseja agendar com: ${professionalName}?`);
+                                if (confirmed) {
+                                    // Redireciona para o WhatsApp mencionando o profissional
+                                    const message = encodeURIComponent(`Olá! Gostaria de agendar um horário com ${professionalName}.`);
+                                    window.location.href = `https://api.whatsapp.com/send?phone=5511962581678&text=${message}`;
+                                }
+
+                                // Destaque o profissional selecionado
+                                document.querySelectorAll('.professional-item').forEach(item => {
+                                    item.style.backgroundColor = '';
+                                });
+                                this.closest('.professional-item').style.backgroundColor = '#222';
+                            });
+                        });
+
+                    </script>
+</body>
+
+</html>
